@@ -14,6 +14,7 @@
    "express-session": "^1.8.2",
    "method-override": "^2.2.0",
    "orchestrate": "^0.3.11",
+   "orientjs": ">=2.1.0",
    "passport": "^0.2.1",
    "passport-local": "^1.0.0",
    "q": "^1.0.1",

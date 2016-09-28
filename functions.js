@@ -97,17 +97,29 @@ exports.getKeys = function() {
 
 exports.localAuth = function(username, password) {
 	var deferred = Q.defer(),
-		username = username.toUpperCase(),
-		hash = bcrypt.hashSync(password, 8);
+		userid = username.toUpperCase();
 
-	db.get('users', username)
+	db.select()
+	.from('Users')
+	.where({
+		"userid": userid
+	})
+	.one()
 	.then(function(msg) {
-		if (hash == msg.body.password) {
-			req.session.notice = "You have been logged in!";
-			deferred.resolve(msg.body);
+		if(msg){
+			if (bcrypt.compareSync(password, msg.password)) {
+				console.log("Correct password entered.");
+				deferred.resolve(msg);
+			}
+			else {
+				deferred.reject("That password was not correct.");
+			}
 		}
-		else {
-			req.session.notice = 
+		else{
+			deferred.reject("Could not find a user with that username.");
 		}
+	})
+	.catch(function(err){
+		deferred.reject("Database error.");
 	})
 }

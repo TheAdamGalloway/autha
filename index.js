@@ -5,7 +5,7 @@ var express = require('express'), //Basic web server functionality
     methodOverride = require('method-override'), // HTTP method override (useful for REST)
     session = require('express-session'), //Session store handler and abstraction for Express.
     passport = require('passport'), // Authentication handling for Express.
-    validator = require('validator'), //Basic validation of strings
+    validator = require('validator'), // Basic validation of strings
     app = express(),
     LocalAuth = require('passport-local'); //The local authentication method
 
@@ -14,12 +14,14 @@ var funct = require('./functions.js'); // Functions file
 //===============PASSPORT=================
 // Passport session setup.
 passport.serializeUser(function(user, done) {
-  //Basic serialisation, not scalable but sufficient for testing.
+  // Serialise the whole user object. 
+  // I have done it like this because
+  // we aren't storing much data about each user
   done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
-  //Basic deserialisation.
+  //Basically just pass the user object as the deserialised session.
   done(null, obj);
 });
 
@@ -87,7 +89,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('X-HTTP-Method-Override'));
-app.use(session({secret: 'totp-testing', saveUninitialized: true, resave: true}));
+app.use(session({
+  secret: 'autha is cool', 
+  saveUninitialized: true, 
+  resave: true
+}));
 app.use(passport.initialize());
 //Static files
 app.use('/static', express.static(__dirname + '/static', { maxAge: 86400000 }));
@@ -96,20 +102,17 @@ app.use(passport.session());
 // Session-persisted message middleware
 app.use(function(req, res, next){
   var err = req.session.error,
-      msg = req.session.notice,
       user = req.user,
       success = req.session.success;
 
-  //Remove errors from session, since they have now been shown.
+  // Remove errors from session, since they have now been shown.
   delete req.session.error;
   delete req.session.success;
-  delete req.session.notice;
 
-  //Add to objects that are about to be rendered using Handlebars.
+  // Add to objects that are about to be rendered using Handlebars.
   if (err) res.locals.notice = err;
-  if (user) res.locals.user = user;
-  if (msg) res.locals.notice = msg;
   if (success) res.locals.notice = success;
+  if (user) res.locals.user = user;
 
   next();
 });
@@ -122,7 +125,7 @@ app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 //===============ROUTES=================
-//displays our homepage
+//GET: Displays our homepage
 app.get('/', function(req, res){
   if (req.user){
     funct.getCodes()
@@ -137,15 +140,23 @@ app.get('/', function(req, res){
   }
 });
 
-//Displays signin/signup page
+//GET: Displays signin/signup page
 app.get('/signin', function(req, res){
   res.render('signin');
 });
 
+
+//POST: Sends request to passport strategy
+app.post('/signin', passport.authenticate('local-signin', { 
+    successRedirect: '/',
+    failureRedirect: '/signin'
+  })
+);
+
 //Sends requests to out passport stategies
-app.post('/local-reg', passport.authenticate('local-signup', {
-  successRedirect: '/',
-  failureRedirect: '/signin'
+app.post('/signup', passport.authenticate('local-signup', {
+    successRedirect: '/',
+    failureRedirect: '/signin'
   })
 );
 
@@ -166,22 +177,15 @@ app.post('/addKey', function(req, res){
   })
 })
 
-//Sends request to passport strategy
-app.post('/signin', passport.authenticate('local-signin', { 
-  successRedirect: '/',
-  failureRedirect: '/signin'
-  })
-);
-
 //Log out route, using passport's in-built logout method, and redirects user to the homepage.
 app.get('/logout', function(req, res){
   var name = req.user.username;
   req.logout();
   res.redirect('/');
-  req.session.notice = "You have successfully been logged out " + name + "!";
+  req.session.success = "You have successfully been logged out " + name + "!";
 });
 
 //Listen for HTTP requests on port 80
 var port = 80;
 app.listen(port);
-console.log("Lstening on port 80.");
+console.log("Lstening on port " + port);
