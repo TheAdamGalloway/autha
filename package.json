@@ -1,0 +1,22 @@
+{
+ "name": "Computer-Science-TOTP",
+ "author": "Adam Galloway <adam@hive.cool>",
+ "main": "index.js",
+ "description": "A simple TOTP solution, mainly aimed toward users of dumbphones, made for Computer Science.",
+ "repository": "",
+ "license": "",
+ "dependencies": {
+   "bcryptjs": "^0.7.12",
+   "express": "^4.9.5",
+   "express-handlebars": "^1.1.0",
+   "body-parser": "^1.9.0",
+   "cookie-parser": "^1.3.3",
+   "method-override": "^2.2.0",
+   "express-session": "^1.8.2",
+   "orchestrate": "^0.3.11",
+   "passport": "^0.2.1",
+   "passport-local": "^1.0.0",
+   "q": "^1.0.1",
+   "validator": "^5.2.0"
+ }
+}
