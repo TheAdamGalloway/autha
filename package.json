@@ -1,23 +1,26 @@
 {
- "name": "Autha",
- "author": "Adam Galloway <adam@hive.cool>",
- "main": "index.js",
- "description": "A centralised TFA management system for teams and organsiations.",
- "repository": "",
- "license": "",
- "dependencies": {
-   "bcryptjs": "^0.7.12",
-   "body-parser": "^1.9.0",
-   "cookie-parser": "^1.3.3",
-   "express": "^4.9.5",
-   "express-handlebars": "^1.1.0",
-   "express-session": "^1.8.2",
-   "method-override": "^2.2.0",
-   "orchestrate": "^0.3.11",
-   "orientjs": ">=2.1.0",
-   "passport": "^0.2.1",
-   "passport-local": "^1.0.0",
-   "q": "^1.0.1",
-   "validator": "^5.2.0"
- }
+  "name": "Autha",
+  "author": "Adam Galloway <adam@hive.cool>",
+  "main": "index.js",
+  "description": "A centralised TFA management system for teams and organsiations.",
+  "repository": "",
+  "license": "",
+  "dependencies": {
+    "base32.js": "^0.1.0",
+    "bcryptjs": "^0.7.12",
+    "body-parser": "^1.9.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "cookie-parser": "^1.3.3",
+    "express": "^4.9.5",
+    "express-handlebars": "^1.1.0",
+    "express-session": "^1.8.2",
+    "method-override": "^2.2.0",
+    "orchestrate": "^0.3.11",
+    "orientjs": ">=2.1.0",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "q": "^1.0.1",
+    "validator": "^5.2.0"
+  }
 }

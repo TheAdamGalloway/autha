@@ -1,0 +1,36 @@
+<div class="new-group col-md-6">
+	<h1>New Team</h1>
+	<form class="newgroup-form" action="/newteam" method="post">
+		<div class="form-group">
+			<label for="name">Group Name</label>
+			<input type="text" class="form-control" id="name" name="name" required>
+		</div>
+		<div class="form-group">
+			<label for="description">Group Description</label>
+			<input type="text" class="form-control" id="description" name="description" required>
+		</div>
+		<div class="form-group">
+			<label for="ownedBy">Belongs to:</label>
+			<select name ="ownedBy" class="form-control" id="ownedBy">
+			{{#each organisations}}
+				<option value="{{this.rid}}">{{this.name}}</option>
+			{{/each}}
+			</select>
+		</div>
+		<button type="submit" action="submit" class="btn btn-default">Submit</button>
+	</form>
+</div>
+<div class="new-organisation col-md-6">
+	<h1>New Organisation</h1>
+	<form class="neworganisation-form" action="/neworg" method="post">
+		<div class="form-group">
+			<label for="name">Organisation Name</label>
+			<input type="text" class="form-control" id="name" name="name">
+		</div>
+		<div class="form-group">
+			<label for="description">Organisation Description</label>
+			<input type="text" class="form-control" id="description" name="description">
+		</div>
+		<button type="submit" action="submit" class="btn btn-default">Submit</button>
+	</form>
+</div>

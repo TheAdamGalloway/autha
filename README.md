@@ -14,3 +14,13 @@ The workflow that is typically followed is this:
 5. Employee logs into Autha, and authenticates using an SMS sent to their phone (the only time this is neccesary).
 6. Employee has a dashboard showing all of the codes that they can use. To receive a code, they must click 'reveal'.
 7. The manager is notified that a certain user accessed a code, and at what time, giving them complete information in the case of a hack.
+
+## requirements
+In order to run this software you must have the following dependencies installed:
+1. Node.JS Binary - Used to interpret the code and run the server
+2. Nodemon (development) - Used to monitor the code, and restart app on changes
+3. PM2 (production) - Used on the server as a headless equivalent to Nodemon, with added monitoring benefits
+4. OrientDB - You must have an Orient database set up as specified in the config file.
+
+## contributing
+If you happen to come across this project and wish to contribute to the development of it, please follow the guidelines outlined in the file CONTRIBUTING.MD

@@ -1,8 +1,63 @@
-<div style="text-align: center;">
-	<h1 class="page-title">Signin Page</h1>
-	<form action="signin" method="post">
-		<input type="text" name="username"><br>
-		<input type="password" name="password"><br>
-		<button action="submit">Submit</button>
-	</form>
+<div>
+	<div class="row">
+		<div class="col-md-6">
+			<h2 class="page-title">Signin</h2>
+			<div class="signin-form">
+				<form action="signin" method="post">
+
+					<div class="form-group">
+						<label for="username">Username</label>
+						<input type="text" class="form-control" id="username" name="username">
+					</div>
+
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input type="password" class="form-control" id="password" name="password"><br>
+					</div>
+
+					<button type="submit" action="submit" class="btn btn-default">Submit</button>
+
+				</form>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<h2 class="page-title">Signup</h2>
+			<div class="signup-form">
+				<form class"form" action="signup" method="post">
+
+					<div class="form-group">
+						<label for="username">Username</label>
+						<input type="text" class="form-control" name="username"><br>
+					</div>
+					<div class="form-group">
+						<label for="email">Email</label>
+						<input type="email" class="form-control" name="email"><br>
+					</div>
+					<div class="form-group">
+						<label for="forename">Forename</label>
+						<input type="text" class="form-control" name="forename"><br>
+					</div>
+
+					<div class="form-group">
+						<label for="surname">Surname</label>
+						<input type="text" class="form-control" name="surname"><br>
+					</div>
+
+					<div class="form-group">
+						<label for="mobile">Mobile Number</label>
+						<input type="text" class="form-control" name="number"><br>
+					</div>
+
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input type="password" class="form-control" name="password"><br>
+					</div>
+
+					<button type="submit" action="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
+
