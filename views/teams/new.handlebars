@@ -1,0 +1,36 @@
+<div class="new-group col-md-6">
+	<h1>New Team</h1>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<form class="newgroup-form" action="/teams" method="post">
+				<div class="form-group">
+					<label for="name">Team Name</label>
+					<input type="text" class="form-control" id="name" name="name" required>
+				</div>
+				<div class="form-group">
+					<label for="description">Team Description</label>
+					<input type="text" class="form-control" id="description" name="description" required>
+				</div>
+				<div class="form-group">
+					<label for="ownedBy">Belongs to:</label>
+					<select name="ownedBy" class="form-control" id="ownedBy">
+					{{#each groups.organisations}}
+						<option value="#{{this.rid}}">{{name}}</option>
+					{{/each}}
+					</select>
+				</div>
+				<button type="submit" action="submit" class="btn btn-default">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="col-md-6">
+	<h1>What are Teams?</h1>
+	<div class="panel panel-default help-box">
+		<div class="panel-body">
+			<p>Teams are collections of people and accounts, which cannot be further sub-categorised. This type of group is essential for teams within organisations, which do not share accounts with other parts of the organisation.</p>
+			<p>For instance, in a typical organisation (in this case a business), two seperate teams would be <b>HR</b> and <b>Finance</b>.</p>
+			<p>The organisation may have global accounts for things like Magazine subscriptions. The HR team may have its own private accounts for employee management websites, and the Finance team may have it's own accounts for Payroll software.</p>
+		</div>
+	</div>
+</div>

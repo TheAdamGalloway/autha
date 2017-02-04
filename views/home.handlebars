@@ -4,18 +4,7 @@
 	<h2>Your Organisations</h2>
 	<p>Organisations that you belong to.</p>
 	<div class="row">
-	{{#each organisations}}
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-			    	<a href="/orgs/{{this.rid}}"> <h3 class="panel-title">{{this.name}}</h3></a>
-			  	</div>
-			  	<div class="panel-body">
-			    	{{this.description}}
-			  	</div>
-			</div>
-		</div>
-	{{/each}}
+		{{>organisations}}
 	</div>
 {{/if}}
 
@@ -24,23 +13,12 @@
 	<h2>Your Teams</h1>
 	<p>Teams that you belong to.</p>
 	<div class="row">
-	{{#each teams}}
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-			    	<a href="/teams/{{this.rid}}"> <h3 class="panel-title">{{this.name}}</h3></a>
-			  	</div>
-			  	<div class="panel-body">
-			    	{{this.description}}
-			  	</div>
-			</div>
-		</div>
-	{{/each}}
+		{{>teams}}
 	</div>
 {{/if}}
 
 {{#if keys}}
-	<h1>Your keys</h1>
+	<h1>Your accounts</h1>
 	{{#each keys}}
 		<div class="key">
 			{{#if this.image}}

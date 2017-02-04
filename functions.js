@@ -4,6 +4,11 @@ var bcrypt = require('bcryptjs'), // Password Hashing with automated salting
 	orient = require('orientjs'),
 	config = require('./config.js'),
 	totp = require('./lib/totp.js');
+
+var message = require('./lib/messaging.js');
+
+message.sendMessage('+447495995614', 'hello');
+
 try{
 	var server = orient(config.databaseServer),
 		db = server.use(config.database);
@@ -162,6 +167,12 @@ exports.createOrganisation = function(organisation, user) {
 	     	.to('$organisation')
 	     	.set()
 		})
+		.let('belongsTo', function(c){
+	  		c.create('EDGE', 'belongsTo')
+	     	.from(user['@rid'])
+	     	.to('$organisation')
+	     	.set()
+		})
 	   	.commit()
 	   	.return('$organisation')
 	   	.one()
@@ -200,6 +211,7 @@ exports.createTeam = function(team, user) {
 		+ ') WHERE @rid='
 		+ team.ownedBy)
 		.then(function(authorised){
+			console.log(authorised);
 			if(authorised){
 				// Database transaction, to ensure consistency
 				db.let('team', function(p){
@@ -239,31 +251,14 @@ exports.createTeam = function(team, user) {
 	return response.promise;
 }
 
-exports.getOrganisations = function(user) {
+exports.getGroups = function(userRID, type) {
 	var response = Q.defer();
-
-	db.query('SELECT expand(OUT("owns")) FROM ' + user['@rid'])
-	.then(function(organisations){
-		for (org in organisations) {
-			organisations[org].rid = organisations[org]['@rid']
-		}
-		response.resolve(organisations);
-	})
-	.catch(function(err){
-		response.reject("Couldn't get list of organisations.");
-	})
-
-	return response.promise;
-}
-
-exports.getGroups = function(user) {
 	var res = {
 		teams: [],
 		organisations: []
 	}
-	var response = Q.defer();
-
-	db.query('SELECT expand(OUT("belongsTo")) FROM ' + user['@rid'])
+	var classQuery = (type == 'Organisations' || type == 'Teams') ? ' where @class = "' + type + '"' : '';
+	db.query('select from (SELECT expand(OUT("belongsTo")) FROM ' + userRID + ')' + classQuery)
 	.then(function(groups){
 		for (group in groups) {
 			group = groups[group];
@@ -278,23 +273,6 @@ exports.getGroups = function(user) {
 	.catch(function(err){
 		console.log(err);
 		response.reject("Couldn't get list of organisations.");
-	})
-
-	return response.promise;
-}
-
-exports.getByRid = function(rid) {
-	// Regular Expression to match RID without '#'
-	var reg = /[0-9]{1,}:[0-9]{1,}$/;
-	rid = '#' + rid.match(reg);
-	var response = Q.defer();
-
-	db.record.get(rid)
-	.then(function gotByRid(msg){
-		response.resolve(msg);
-	})
-	.error(function (err){
-		response.reject(err);
 	})
 
 	return response.promise;
@@ -317,10 +295,6 @@ exports.addKey = function(title, key, user) {
 	})
 
 	return deferred.promise;
-}
-
-exports.removeKey = function(rid) {
-
 }
 
 exports.getKeys = function() {
@@ -371,30 +345,25 @@ exports.getGroup = function(groupRID, userRID) {
 		keys: undefined
 	}
 
-	db.query('SELECT FROM (SELECT EXPAND(out("owns")) FROM' 
+	db.query('SELECT FROM (SELECT EXPAND(out("belongsTo")) FROM' 
 	+ userRID
 	+ ') WHERE @rid='
 	+ groupRID)
-	.then(function(authorised){
-		if(authorised){
-			db.record.get(rid)
-			.then(function(group){
-				res.group = group;
-				db.query('select expand(out("hasKey")) from ' + rid)
-				.then(function(keys){
-					for (key in keys) {
-						key = keys[key];
-						var keyRID = key['@rid'].toString();
-						var reg = /[0-9]{1,}:[0-9]{1,}$/;
-						var safeRID = keyRID.match(reg);
-						key.rid = safeRID;
-					}
-					res.keys = keys;
-					response.resolve(res);
-				})
-				.catch(function(err){
-					response.reject("Could not check permissions for that page.");
-				})
+	.then(function(group){
+		console.log(group);
+		if(group[0]){
+			res.group = group[0];
+			db.query('select expand(out("hasKey")) from ' + rid)
+			.then(function(keys){
+				for (key in keys) {
+					key = keys[key];
+					var keyRID = key['@rid'].toString();
+					var reg = /[0-9]{1,}:[0-9]{1,}$/;
+					var safeRID = keyRID.match(reg);
+					key.rid = safeRID;
+				}
+				res.keys = keys;
+				response.resolve(res);
 			})
 			.catch(function(err){
 				response.reject("Could not check permissions for that page.");
@@ -406,10 +375,6 @@ exports.getGroup = function(groupRID, userRID) {
 	})
 
     return response.promise;
-}
-
-exports.allowKeyAccess = function(group, organisation) {
-	// Allow access to specific key
 }
 
 function normaliseRID(RID, callback) {

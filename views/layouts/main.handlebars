@@ -1,64 +1,12 @@
 <head>
-    <title>Autha</title>
+    <title>Autha{{#if title}} - {{title}}{{/if}}</title>
     <link href="/static/css/core.css" rel="stylesheet" type="text/css"/>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     </meta>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">
-                    <p>
-                        Autha
-                    </p>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                {{#if user}}
-                <ul class="nav navbar-nav navbar-left">
-                    <li class="{{#ifCond title '==' 'Home'}}active{{/ifCond}}">
-                        <a href="/">
-                            Home
-                        </a>
-                    </li>
-                    <li class="{{#ifCond title '==' 'Organisations'}}active{{/ifCond}}">
-                        <a href="/orgs">
-                            Organisations
-                        </a>
-                    </li>
-                    <li class="{{#ifCond title '==' 'Teams'}}active{{/ifCond}}">
-                        <a href="/teams">
-                            Teams
-                        </a>
-                    </li>
-                </ul>
-                {{/if}}
-                <ul class="nav navbar-nav navbar-right">
-                {{#if user}}
-                    <li class="dropdown">
-			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.forename}}<span class="caret"></span></a>
-			          <ul class="dropdown-menu">
-			            <li><a href="/profile">Profile</a></li>
-                        <li><a href="/settings">Settings</a></li>
-			            <li role="separator" class="divider"></li>
-                        <li><a href="/logout">Logout</a></li>
-			          </ul>
-			        </li>
-                {{else}}
-                    <li><a href="/signin">Sign in</a></li>
-                {{/if}}
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {{>navbar}}
     <div class="container">
         {{#if error}}
             <div class="alert alert-warning" role="alert">{{error}}</div>

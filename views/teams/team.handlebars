@@ -1,0 +1,28 @@
+<h1>Team: <strong>{{team.name}}</strong></h1>
+<p>Description: <strong>{{team.description}}</strong></p>
+<p>Number of Keys: <strong>{{team.keyCount}}</strong></p>
+<p>Number of Members: <strong>{{team.memberCount}}</strong></p>
+
+
+{{#if isAdmin}}
+	<a href="./delete">Delete this Team</a>
+{{/if}}
+
+{{#if keys}}
+	<hr>
+	<h2>Accounts</h2>
+	{{#each keys}}
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+			    	<a target="_blank" href="http://{{this.URL}}"> <h3 class="panel-title">{{this.name}}</h3></a>
+			  	</div>
+			  	<div class="panel-body">
+			  		{{this.description}}
+			  		<hr>
+			  		<center><a class="btn btn-default generateCode" href="/code/{{this.rid}}" role="button" name="{{this.rid}}">Generate TFA Code</a></center>
+			  	</div>
+			</div>
+		</div>
+	{{/each}}
+{{/if}}

@@ -1,0 +1,62 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                <p>
+                    Autha
+                </p>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            {{#if user}}
+            <ul class="nav navbar-nav navbar-left">
+                <li class="{{#ifCond title '==' 'Home'}}active{{/ifCond}}">
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+                <li class="dropdown {{#ifCond title '==' 'Organisations'}}active{{/ifCond}}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Organisations<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/organisations">Apple</a></li>
+                        <li><a href="/organisations">Microsoft</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/organisations/new">New</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown {{#ifCond title '==' 'Teams'}}active{{/ifCond}}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Teams<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/organisations">Apple</a></li>
+                        <li><a href="/organisations">Microsoft</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/teams/new">New</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {{/if}}
+            <ul class="nav navbar-nav navbar-right">
+            {{#if user}}
+                <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.forename}}<span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="/profile">Profile</a></li>
+                    <li><a href="/settings">Settings</a></li>
+		            <li role="separator" class="divider"></li>
+                    <li><a href="/logout">Logout</a></li>
+		          </ul>
+		        </li>
+            {{else}}
+                <li><a href="/signin">Sign In</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+            {{/if}}
+            </ul>
+        </div>
+    </div>
+</nav>

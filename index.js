@@ -130,13 +130,13 @@ var hbs = exphbs.create({
 });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+
 //===============ROUTES=================
 //GET: Displays our homepage
 app.get('/', function(req, res) {
 	if (req.user) {
-		funct.getGroups(req.user)
+		funct.getGroups(req.user['@rid'])
 		.then(function(groups){
-			console.log(groups);
 			res.render('home', {
 				title: 'Home',
 				organisations: groups.organisations,
@@ -151,11 +151,6 @@ app.get('/', function(req, res) {
 				title: 'Home'
 			})
 		})
-		// res.render('home');
-		// funct.getProfile()
-		// .then(function(){
-		//   //Render page with details about organisations, etc.
-		// })
 	} else {
 		res.redirect('signin');
 		//Show default page
@@ -163,10 +158,14 @@ app.get('/', function(req, res) {
 	}
 });
 
-/*--------Signin/Signup Logic-------------*/
-//GET: Displays signin/signup page
+/*--------Signin/Signup Routing-------------*/
+//GET: Displays signin page
 app.get('/signin', function(req, res) {
 	res.render('signin');
+});
+//GET: Displays signup page
+app.get('/signup', function(req, res) {
+	res.render('signup');
 });
 //POST: Sends request to passport strategy
 app.post('/signin', passport.authenticate('local-signin', {
@@ -194,35 +193,109 @@ app.post('/signup', passport.authenticate('local-signup', {
 		res.redirect('/');
 	}
 });
+// Logout route, using passport's in-built logout method, and redirects user to the homepage.
+app.get('/logout', ensureAuthenticated, function(req, res) {
+	req.logout();
+	req.session.success = "You have successfully been logged out.";
+	res.redirect('/');
+});
 
-// Route for creating a new organisation, which can contain teams and keys.
-app.get('/newgroup', ensureAuthenticated, function(req, res) {
-	funct.getOrganisations(req.user)
-	.then(function(organisations){
-		res.render('newGroup', {
-			organisations: organisations
+/*-----------------Standard Structure Routes ------------------*/
+
+// ORGANISATIONS API
+// Route for getting a list of organisations that the user belongs to.
+app.get('/organisations', ensureAuthenticated, function(req, res){
+	funct.getGroups(req.user['@rid'], 'Organisations')
+	.then(function(msg){
+		res.render('organisations', {
+			title: 'Organisations',
+			organisations: msg.organisations
 		})
 	})
-	.catch(function(err) {
+	.catch(function(err){
 		req.session.error = err;
-		rs.redirect('/');
+		res.redirect('/');
 	})
 });
-app.post('/neworg', ensureAuthenticated, function(req, res) {
+// New group
+app.get('/organisations/new', ensureAuthenticated, function(req, res){
+	funct.getGroups(req.user['@rid'], 'Organisations')
+	.then(function(organisations){
+		console.log(organisations);
+		res.render('organisations/new', {
+			groups: organisations
+		});
+	})
+	.catch(function(err){
+		req.session.error = "Couldn't find relevant organisations.";
+		res.render('newgroup');
+	})
+});
+// Route for getting information about a specific organisation.
+app.get('/organisations/:orgRID', ensureAuthenticated, function(req, res){
+	var RID = req.params.orgRID;
+
+	funct.getGroup(RID, req.user['@rid'])
+	.then(function(response){
+		res.render('organisations/organisation', {
+			isAdmin: true,
+			title: 'Organisations',
+			organisation: response.group,
+			keys: response.keys
+		})
+	})
+	.catch(function(err){
+		req.session.error = err;
+		res.redirect('/organisations');
+	})
+});
+// Creating a new organisation.
+app.post('/organisations', ensureAuthenticated, function(req, res) {
 	funct.createOrganisation(req.body, req.user)
 	.then(function orgSuccess(orgRID) {
 		var reg = /[0-9]{1,}:[0-9]{1,}$/;
 		var safeRID = orgRID.match(reg);
 
 		req.session.success = "Successfully created organisation.";
-		res.redirect('/orgs/' + safeRID);
+		res.redirect('/organisations/' + safeRID);
 	})
 	.catch(function newOrgFail(err) {
 		req.session.error = err;
 		res.redirect('/newgroup');
 	})
 });
-app.post('/newteam', ensureAuthenticated, function(req, res) {
+
+// TEAMS API
+// Route for getting a list of organisations that the user belongs to.
+app.get('/teams', ensureAuthenticated, function(req, res){
+	funct.getGroups(req.user['@rid'], 'Teams')
+	.then(function(msg){
+		res.render('teams', {
+			title: 'Teams',
+			teams: msg.teams
+		})
+	})
+	.catch(function(err){
+		req.session.error = err;
+		res.redirect('/');
+	})
+});
+app.get('/teams/new', ensureAuthenticated, function(req, res){
+	res.render('teams/new');	
+});
+app.get('/teams/:teamID', ensureAuthenticated, function(req, res){
+	var RID = req.params.teamID;
+	
+	funct.getGroup(RID, req.user['@rid'])
+	.then(function(response){
+		res.render('teams/team', {
+			title: 'Teams',
+			team: response.group,
+			keys: response.keys
+		})
+	})
+});
+app.post('/teams', ensureAuthenticated, function(req, res) {
 	funct.createTeam(req.body, req.user)
 	.then(function teamSuccess(teamRID) {
 		var reg = /[0-9]{1,}:[0-9]{1,}$/;
@@ -236,30 +309,8 @@ app.post('/newteam', ensureAuthenticated, function(req, res) {
 		res.redirect('/newgroup');
 	})
 });
-app.get('/orgs/:orgRID', ensureAuthenticated, function(req, res){
-	var RID = req.params.orgRID;
 
-	funct.getGroup(RID, req.user['@rid'])
-	.then(function(response){
-		res.render('groupPage', {
-			title: 'Organisations',
-			organisation: response.group,
-			keys: response.keys
-		})
-	})
-});
-app.get('/teams/:teamID', ensureAuthenticated, function(req, res){
-	var RID = req.params.teamID;
-	
-	funct.getGroup(RID, req.user['@rid'])
-	.then(function(response){
-		res.render('groupPage', {
-			title: 'Teams',
-			team: response.group,
-			keys: response.keys
-		})
-	})
-});
+// CODES API
 app.get('/code/:keyID', ensureAuthenticated, function(req, res){
 	var keyID = req.params.keyID;
 
@@ -269,13 +320,12 @@ app.get('/code/:keyID', ensureAuthenticated, function(req, res){
 	})
 	.catch(function(err){
 	})
-})
-// Logout route, using passport's in-built logout method, and redirects user to the homepage.
-app.get('/logout', ensureAuthenticated, function(req, res) {
-	req.logout();
-	req.session.success = "You have successfully been logged out.";
-	res.redirect('/');
 });
+
+app.get('*', function(req, res){
+	req.session.error = "Page not found.";
+	res.redirect('/');
+})
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {

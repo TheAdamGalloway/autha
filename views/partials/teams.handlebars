@@ -1,0 +1,12 @@
+{{#each teams}}
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+		    	<a href="/teams/{{this.rid}}"> <h3 class="panel-title">{{this.name}}</h3></a>
+		  	</div>
+		  	<div class="panel-body">
+		    	{{this.description}}
+		  	</div>
+		</div>
+	</div>
+{{/each}}
