@@ -1,11 +1,12 @@
 <div>
 	<div class="row">
-		<div class="col-md-12">
+		<!-- Sign In Column -->
+		<div class="col-md-6">
 			<h2 class="page-title">Sign In</h2>
 			<div class="signin-form">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<form action="signin" method="post">
+						<form action="signin" method="post" name="signin" onsubmit="return(validateForm('signin'))">
 							<div class="form-group">
 								<label for="username">Username</label>
 								<input type="text" class="form-control" id="username" name="username">
@@ -17,9 +18,20 @@
 							</div>
 
 							<button type="submit" action="submit" class="btn btn-default">Submit</button>
-
 						</form>
 					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Explanation Column -->
+		<div class="col-md-6">
+			<h2 class="page-title">What is Autha?</h2>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<p class="autha-description">
+						Autha is a new way for organsiations and large teams to manage their Two-Factor Authentication schemes in a centralised way. To get started, simply visit the Sign Up page.<br />
+						If your organisation already has Autha enabled, you will have been given your Sign In credentials by your account manager.
+					</p>
 				</div>
 			</div>
 		</div>

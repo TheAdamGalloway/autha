@@ -219,17 +219,17 @@ app.get('/organisations', ensureAuthenticated, function(req, res){
 });
 // New group
 app.get('/organisations/new', ensureAuthenticated, function(req, res){
-	funct.getGroups(req.user['@rid'], 'Organisations')
+	/*funct.getGroups(req.user['@rid'], 'Organisations')
 	.then(function(organisations){
-		console.log(organisations);
+		console.log(organisations);*/
 		res.render('organisations/new', {
-			groups: organisations
+			// groups: organisations
 		});
-	})
-	.catch(function(err){
+	// })
+	/*.catch(function(err){
 		req.session.error = "Couldn't find relevant organisations.";
 		res.render('newgroup');
-	})
+	})*/
 });
 // Route for getting information about a specific organisation.
 app.get('/organisations/:orgRID', ensureAuthenticated, function(req, res){
@@ -281,7 +281,17 @@ app.get('/teams', ensureAuthenticated, function(req, res){
 	})
 });
 app.get('/teams/new', ensureAuthenticated, function(req, res){
-	res.render('teams/new');	
+	funct.getGroups(req.user['@rid'], 'Organisations')
+	.then(function(organisations){
+		console.log(organisations);
+		res.render('teams/new', {
+			groups: organisations
+		});
+	})
+	.catch(function(err){
+		req.session.error = "Couldn't find relevant organisations.";
+		res.render('newgroup');
+	})	
 });
 app.get('/teams/:teamID', ensureAuthenticated, function(req, res){
 	var RID = req.params.teamID;
@@ -338,7 +348,7 @@ function ensureAuthenticated(req, res, next) {
 	}
 }
 //Listen for HTTP requests on port 80
-var port = 80;
+var port = 8080;
 app.listen(port);
 console.log("Lstening on port " + port + ".");
 // Notice the type coercion above. Javascript simply coerces the integer into a string.
