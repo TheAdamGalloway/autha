@@ -217,7 +217,7 @@ app.get('/organisations', ensureAuthenticated, function(req, res){
 		res.redirect('/');
 	})
 });
-// New group
+// New group 
 app.get('/organisations/new', ensureAuthenticated, function(req, res){
 	/*funct.getGroups(req.user['@rid'], 'Organisations')
 	.then(function(organisations){
