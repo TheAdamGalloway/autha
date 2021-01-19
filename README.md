@@ -1,5 +1,8 @@
-# autha
-A centralised TFA management system for teams and organsiations
+# autha (unmaintained)
+A centralised TFA management system for teams and organsiations.
+
+*This code was written for a CS course in college. It's not suitable for production use, and its authentication method should not be relied on. Otherwise, the underlying code to generate TFA tokens is solid, and I think the concept is still interesting.*
+
 ## what's the point?
 I created Autha because managing two-factor authentication amongst large teams can easily become very cumbersome and decentralised. Are your employees using Google Authenticator, Authy, Duo or SMS? It can very easily become messy and unorganised, when your team members are each using their own systems. Additionally, this can quickly spiral out of control, meaning your security is impacted, since hackers could trivially infiltrate one the devices that stores the TFA keys.
 ## how is it done?
